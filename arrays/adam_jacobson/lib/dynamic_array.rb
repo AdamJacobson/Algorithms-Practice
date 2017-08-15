@@ -25,6 +25,7 @@ class DynamicArray
 
   # O(1)
   def pop
+    raise "index out of bounds" unless length > 0
     value = self[length - 1]
     self.length -= 1
     value
