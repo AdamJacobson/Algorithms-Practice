@@ -1,5 +1,7 @@
 require_relative "static_array"
 
+require 'byebug'
+
 class RingBuffer
   attr_reader :length
 
@@ -63,7 +65,7 @@ class RingBuffer
     self.length += 1
   end
 
-  def print
+  def to_a
     idx = self.start_idx
     count = 0
 
@@ -87,18 +89,14 @@ class RingBuffer
   end
 
   def resize!
-    puts "Resize ring buffer to #{capacity * 2}"
+    current_elements = self.to_a
+    self.start_idx = 0
 
     self.capacity *= 2
     new_store = StaticArray.new(self.capacity)
 
-    ring_idx = start_idx
-    new_idx = 0
-    while new_idx < length
-      new_store[new_idx] = self.store[ring_idx]
-
-      ring_idx = (ring_idx + 1) % self.capacity
-      new_idx += 1
+    current_elements.each_with_index do |el, idx|
+      new_store[idx] = el
     end
 
     self.store = new_store
