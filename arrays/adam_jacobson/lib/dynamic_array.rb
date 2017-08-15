@@ -1,5 +1,7 @@
 require_relative "static_array"
 
+require 'byebug'
+
 class DynamicArray
   attr_reader :length
 
@@ -39,23 +41,28 @@ class DynamicArray
   # O(n): has to shift over all the elements.
   def shift
     value = self[0]
-    self.length.times { |idx| self[idx] = self[idx+1] }
+    idx = 0
+    while idx < length - 1
+      self[idx] = self[idx + 1]
+      idx += 1
+    end
     self.length -= 1
     value
   end
 
   # O(n): has to shift over all the elements.
   def unshift(val)
-    # []
-    # length 0  cap 1
-
     self.resize! if self.capacity == self.length
 
-    if length > 0
-      (self.length + 1).downto(1) do |idx|
-        self[idx] = self[idx - 1]
-      end
+    self.length += 1
+
+    idx = self.length - 1
+    while idx >= 1
+      self.store[idx] = self.store[idx - 1]
+      idx -= 1
     end
+
+    self[0] = val
   end
 
   protected
