@@ -41,4 +41,31 @@ describe QueueWithMax do
     end
   end
 
+  it 'returns the correct max while enqueuing and dequeuing' do
+    q = QueueWithMax.new
+
+    q.enqueue(6) # [6]
+    expect(q.max).to eq(6)
+
+    q.enqueue(5) # [6, 5]
+    expect(q.max).to eq(6)
+
+    q.enqueue(1) # [6, 5, 1]
+    expect(q.max).to eq(6)
+
+    q.enqueue(3) # [6, 5, 1, 3]
+    expect(q.max).to eq(6)
+
+    q.dequeue # [5, 1, 3]
+    expect(q.max).to eq(5)
+
+    q.dequeue # [1, 3]
+    expect(q.max).to eq(3)
+
+    q.dequeue # [3]
+    expect(q.max).to eq(3)
+
+    q.enqueue(10) # [3, 10]
+    expect(q.max).to eq(10)
+  end
 end
