@@ -75,8 +75,6 @@ class DynamicArray
 
   # O(n): has to copy over all the elements to the new store.
   def resize!
-    puts "Resize to #{capacity * 2}"
-
     self.capacity *= 2
     new_store = StaticArray.new(self.capacity)
 
