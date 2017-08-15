@@ -1,11 +1,11 @@
 require_relative "static_array"
 
 class DynamicArray
-  attr_reader :length # Number of items currently held
+  attr_reader :length
 
   def initialize
-    self.length = 0
-    self.capacity = 1
+    self.length = 0 # Number of items currently held
+    self.capacity = 8 # Max number of items that can be held
     self.store = StaticArray.new(capacity)
   end
 
@@ -38,10 +38,24 @@ class DynamicArray
 
   # O(n): has to shift over all the elements.
   def shift
+    value = self[0]
+    self.length.times { |idx| self[idx] = self[idx+1] }
+    self.length -= 1
+    value
   end
 
   # O(n): has to shift over all the elements.
   def unshift(val)
+    # []
+    # length 0  cap 1
+
+    self.resize! if self.capacity == self.length
+
+    if length > 0
+      (self.length + 1).downto(1) do |idx|
+        self[idx] = self[idx - 1]
+      end
+    end
   end
 
   protected
@@ -53,6 +67,8 @@ class DynamicArray
 
   # O(n): has to copy over all the elements to the new store.
   def resize!
+    puts "Resize to #{capacity * 2}"
+
     self.capacity *= 2
     new_store = StaticArray.new(self.capacity)
 
