@@ -71,6 +71,8 @@ class LinkedList
     @tail.prev.next = node  # old last next to new node
     @tail.prev = node       # tail prev to new node
     @tail.prev.next = @tail # new node next to tail
+
+    node
   end
 
   def update(key, val)
