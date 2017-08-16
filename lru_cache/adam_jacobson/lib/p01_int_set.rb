@@ -1,14 +1,25 @@
 class MaxIntSet
   def initialize(max)
+    @max = max
+    @store = Array.new(max)
   end
 
   def insert(num)
+    if num < 0 || num > @max
+      raise "Out of bounds"
+    end
+    @store[num] = true
   end
 
   def remove(num)
+    if num < 0 || num > @max
+      raise "Out of bounds"
+    end
+    @store[num] = false
   end
 
   def include?(num)
+    @store[num]
   end
 
   private
@@ -19,7 +30,6 @@ class MaxIntSet
   def validate!(num)
   end
 end
-
 
 class IntSet
   def initialize(num_buckets = 20)
