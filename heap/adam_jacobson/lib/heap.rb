@@ -4,6 +4,7 @@ class BinaryMinHeap
   attr_reader :store, :prc
 
   def initialize(&prc)
+    # prc represents the ideal condition. If true, nothing needs to be done.
     prc = Proc.new { |parent, child| parent < child } if prc.nil?
     @heap = []
   end
@@ -35,7 +36,27 @@ class BinaryMinHeap
   end
 
   def self.heapify_down(array, parent_idx, len = array.length, &prc)
+    prc = Proc.new { |parent, child| parent < child } if prc.nil?
+    child_idxs = self.child_indices(len, parent_idx)
 
+    while child_idxs.any? { |idx| idx < len - 1 }
+      parent = array[parent_idx]
+      children = [array[child_idxs[0]], array[child_idxs[1]]]
+
+      if !prc.call(parent, children[0])
+        array[parent_idx], array[child_idxs[0]] = array[child_idxs[0]], array[parent_idx]
+        parent_idx = child_idxs[0]
+      elsif !prc.call(parent, children[1])
+        array[parent_idx], array[child_idxs[1]] = array[child_idxs[1]], array[parent_idx]
+        parent_idx = child_idxs[1]
+      else
+        return array # No swapping done. Item is in correct position
+      end
+
+      child_idxs = self.child_indices(len, parent_idx)
+    end
+
+    return array
   end
 
   def self.heapify_up(array, child_idx, len = array.length, &prc)
