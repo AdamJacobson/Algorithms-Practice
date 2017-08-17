@@ -20,30 +20,22 @@ class BinaryMinHeap
   def push(val)
   end
 
-  def child_indices(parent_idx, length)
-    if parent_idx >= length
-      return []
-    end
+  def self.child_indices(len, parent_idx)
+    children = []
 
-    left = child_indices((parent_idx * 2) + 1)
-    right = child_indices((parent_idx * 2) + 2)
+    maybe = [(parent_idx * 2) + 1, (parent_idx * 2) + 2]
+    maybe.each { |ch| children << ch if ch < len }
 
-    [].concat(left).concat(right)
-  end
-
-  def parent_index(child_idx)
-    debugger
-    ((child_idx - 1) / 2)
-  end
-
-  public
-  def self.child_indices(len, parent_index)
+    children
   end
 
   def self.parent_index(child_index)
+    raise "root has no parent" if child_index == 0
+    ((child_index - 1) / 2)
   end
 
   def self.heapify_down(array, parent_idx, len = array.length, &prc)
+
   end
 
   def self.heapify_up(array, child_idx, len = array.length, &prc)
