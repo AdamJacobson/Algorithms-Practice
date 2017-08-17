@@ -36,22 +36,28 @@ class BinaryMinHeap
   end
 
   def self.heapify_down(array, parent_idx, len = array.length, &prc)
-    prc = Proc.new { |el1, el2| el1 <=> el2 } if prc.nil?
+    prc ||= Proc.new { |el1, el2| el1 <=> el2 } # min heap
     child_idxs = self.child_indices(len, parent_idx)
-
-    while child_idxs.any? { |idx| idx < len - 1 }
+    while child_idxs.any?
       parent = array[parent_idx]
-      children = [array[child_idxs[0]], array[child_idxs[1]]]
 
-      if prc.call(parent, children[0]) >= 0
-        array[parent_idx], array[child_idxs[0]] = array[child_idxs[0]], array[parent_idx]
-        parent_idx = child_idxs[0]
-      elsif prc.call(parent, children[1]) >= 0
-        array[parent_idx], array[child_idxs[1]] = array[child_idxs[1]], array[parent_idx]
-        parent_idx = child_idxs[1]
+      child_idxs = child_idxs.select { |i| prc.call(parent, array[i]) > 0 }
+
+      if child_idxs.empty?
+        return array
+      elsif child_idxs.length == 1
+        swap_idx = child_idxs[0]
       else
-        return array # No swapping done. Item is in correct position
+        case prc.call(array[child_idxs[0]], array[child_idxs[1]])
+        when 1
+          swap_idx = child_idxs[1]
+        else
+          swap_idx = child_idxs[0]
+        end
       end
+
+      array[parent_idx], array[swap_idx] = array[swap_idx], array[parent_idx]
+      parent_idx = swap_idx
 
       child_idxs = self.child_indices(len, parent_idx)
     end
@@ -68,7 +74,7 @@ class BinaryMinHeap
       parent = array[parent_idx]
       child = array[child_idx]
 
-      if prc.call(parent, child) >= 0
+      if prc.call(parent, child) > 0
         array[parent_idx], array[child_idx] = array[child_idx], array[parent_idx]
         child_idx = parent_idx
         # parent_idx = self.parent_index(child_idx)
