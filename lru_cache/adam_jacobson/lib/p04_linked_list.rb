@@ -24,6 +24,12 @@ class Node
   end
 end
 
+# Given a doubly linked list, like the one you built, reverse it.
+# You can assume that this method is monkey patching the LinkedList class
+# that you built, so any methods and instance variables in that class
+# are available to you.
+
+
 class LinkedList
   include Enumerable
 
@@ -32,6 +38,21 @@ class LinkedList
     @tail = Node.new(:TAIL)
     @head.next = @tail
     @tail.prev = @head
+  end
+
+  # Doesn't work yet
+  def reverse
+    node = first
+    until node.next == last
+      nx = node.next
+      pr = node.prev
+
+      node.next = pr
+      node.prev = nx
+
+      node = nx
+    end
+    node
   end
 
   def [](i)
