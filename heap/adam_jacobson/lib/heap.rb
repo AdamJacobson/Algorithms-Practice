@@ -6,19 +6,30 @@ class BinaryMinHeap
   def initialize(&prc)
     # prc represents the ideal condition. If true, nothing needs to be done.
     prc = Proc.new { |parent, child| parent < child } if prc.nil?
-    @heap = []
+    @store = []
   end
 
   def count
+    @store.length
   end
 
   def extract
+    last = self.count - 1
+
+    @store[0], @store[last] = @store[last], @store[0]
+    val = @store.pop
+    @store = BinaryMinHeap.heapify_down(@store, 0)
+
+    val
   end
 
   def peek
+    @store[0]
   end
 
   def push(val)
+    @store.push(val)
+    @store = BinaryMinHeap.heapify_up(@store, self.count - 1)
   end
 
   def self.child_indices(len, parent_idx)
@@ -38,9 +49,9 @@ class BinaryMinHeap
   def self.heapify_down(array, parent_idx, len = array.length, &prc)
     prc ||= Proc.new { |el1, el2| el1 <=> el2 } # min heap
     child_idxs = self.child_indices(len, parent_idx)
+
     while child_idxs.any?
       parent = array[parent_idx]
-
       child_idxs = child_idxs.select { |i| prc.call(parent, array[i]) > 0 }
 
       if child_idxs.empty?
@@ -77,7 +88,6 @@ class BinaryMinHeap
       if prc.call(parent, child) > 0
         array[parent_idx], array[child_idx] = array[child_idx], array[parent_idx]
         child_idx = parent_idx
-        # parent_idx = self.parent_index(child_idx)
       else
         return array
       end
