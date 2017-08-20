@@ -34,10 +34,18 @@ class BinarySearchTree
   end
 
   def delete(value)
+    node = find(value)
+    @root = nil if node == @root
+    delete_node(node) if node
   end
 
   # helper method for #delete:
   def maximum(tree_node = @root)
+    if tree_node.right.nil?
+      return tree_node
+    end
+
+    maximum(tree_node.right)
   end
 
   def depth(tree_node = @root)
@@ -49,21 +57,48 @@ class BinarySearchTree
   def in_order_traversal(tree_node = @root, arr = [])
   end
 
-
   private
-  # optional helper methods go here:
+
+  def delete_reference_to_node(node)
+    if node.parent
+      if node.parent.left == node
+        node.parent.left = nil
+      else
+        node.parent.right = nil
+      end
+    end
+  end
+
+  def delete_node(node)
+    if !node.left && !node.right
+      delete_reference_to_node(node)
+    elsif node.left && !node.right
+      node = node.left
+    elsif !node.left && node.right
+      node = node.right
+    else
+      replacement = maximum(node.left)
+      node.value = replacement.value
+
+      delete_node(replacement)
+    end
+  end
 
   def insert_rec(value, tree_node)
     case value <=> tree_node.value
     when 1
       if tree_node.right.nil?
-        tree_node.right = BSTNode.new(value)
+        new_node = BSTNode.new(value)
+        new_node.parent = tree_node
+        tree_node.right = new_node
         return
       end
       insert_rec(value, tree_node.right)
     else
       if tree_node.left.nil?
-        tree_node.left = BSTNode.new(value)
+        new_node = BSTNode.new(value)
+        new_node.parent = tree_node
+        tree_node.left = new_node
         return
       end
       insert_rec(value, tree_node.left)
