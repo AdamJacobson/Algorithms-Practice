@@ -66,14 +66,18 @@ class BinarySearchTree
     left_dep = depth(tree_node.left)
     right_dep = depth(tree_node.right)
 
+    if (left_dep - right_dep).abs > 1
+      return false
+    end
+
     left_bal = is_balanced?(tree_node.left)
     right_bal = is_balanced?(tree_node.right)
 
-    if (left_dep - right_dep).abs > 1 && left_bal && right_bal
-      return true
+    if !left_bal && !right_bal
+      return false
     end
 
-    false
+    true
   end
 
   def in_order_traversal(tree_node = @root, arr = [])
