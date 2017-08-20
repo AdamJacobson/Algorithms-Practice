@@ -11,26 +11,13 @@ class BinarySearchTree
     @root = nil
   end
 
-  def insert(value, tree_node = @root)
-    if tree_node.nil?
+  def insert(value)
+    if @root.nil?
       @root = BSTNode.new(value)
       return
     end
 
-    case value <=> tree_node.value
-    when 1
-      if tree_node.right.nil?
-        tree_node.right = BSTNode.new(value)
-        return
-      end
-      insert(value, tree_node.right)
-    else
-      if tree_node.left.nil?
-        tree_node.left = BSTNode.new(value)
-        return
-      end
-      insert(value, tree_node.left)
-    end
+    insert_rec(value, @root)
   end
 
   def find(value, tree_node = @root)
@@ -67,6 +54,19 @@ class BinarySearchTree
   # optional helper methods go here:
 
   def insert_rec(value, tree_node)
-
+    case value <=> tree_node.value
+    when 1
+      if tree_node.right.nil?
+        tree_node.right = BSTNode.new(value)
+        return
+      end
+      insert_rec(value, tree_node.right)
+    else
+      if tree_node.left.nil?
+        tree_node.left = BSTNode.new(value)
+        return
+      end
+      insert_rec(value, tree_node.left)
+    end
   end
 end
