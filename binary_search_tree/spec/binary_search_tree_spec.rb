@@ -1,5 +1,6 @@
 require 'rspec'
 require 'binary_search_tree'
+require 'bst_node'
 
 describe BinarySearchTree do
   let(:bst) { BinarySearchTree.new }

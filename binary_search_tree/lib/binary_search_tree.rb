@@ -1,5 +1,8 @@
 # There are many ways to implement these methods, feel free to add arguments
 # to methods as you see fit, or to create helper methods.
+require_relative 'bst_node'
+
+require 'byebug'
 
 class BinarySearchTree
   attr_reader :root
@@ -8,11 +11,39 @@ class BinarySearchTree
     @root = nil
   end
 
-  def insert(value)
-    
+  def insert(value, tree_node = @root)
+    if tree_node.nil?
+      @root = BSTNode.new(value)
+      return
+    end
+
+    case value <=> tree_node.value
+    when 1
+      if tree_node.right.nil?
+        tree_node.right = BSTNode.new(value)
+        return
+      end
+      insert(value, tree_node.right)
+    else
+      if tree_node.left.nil?
+        tree_node.left = BSTNode.new(value)
+        return
+      end
+      insert(value, tree_node.left)
+    end
   end
 
   def find(value, tree_node = @root)
+    return nil if tree_node.nil?
+
+    case value <=> tree_node.value
+    when 0
+      return tree_node
+    when -1
+      return find(value, tree_node.right)
+    when 1
+      return find(value, tree_node.left)
+    end
   end
 
   def delete(value)
@@ -35,4 +66,7 @@ class BinarySearchTree
   private
   # optional helper methods go here:
 
+  def insert_rec(value, tree_node)
+
+  end
 end
