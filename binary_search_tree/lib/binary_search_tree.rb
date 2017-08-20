@@ -1,11 +1,15 @@
-# There are many ways to implement these methods, feel free to add arguments 
+# There are many ways to implement these methods, feel free to add arguments
 # to methods as you see fit, or to create helper methods.
 
 class BinarySearchTree
+  attr_reader :root
+
   def initialize
+    @root = nil
   end
 
   def insert(value)
+    
   end
 
   def find(value, tree_node = @root)
@@ -19,7 +23,7 @@ class BinarySearchTree
   end
 
   def depth(tree_node = @root)
-  end 
+  end
 
   def is_balanced?(tree_node = @root)
   end
