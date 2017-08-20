@@ -27,9 +27,9 @@ class BinarySearchTree
     when 0
       return tree_node
     when -1
-      return find(value, tree_node.right)
-    when 1
       return find(value, tree_node.left)
+    when 1
+      return find(value, tree_node.right)
     end
   end
 
