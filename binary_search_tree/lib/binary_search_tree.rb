@@ -35,7 +35,10 @@ class BinarySearchTree
 
   def delete(value)
     node = find(value)
-    @root = nil if node == @root
+    if node == @root
+      @root = nil
+      return
+    end
     delete_node(node) if node
   end
 
@@ -49,9 +52,28 @@ class BinarySearchTree
   end
 
   def depth(tree_node = @root)
+    return 0 if tree_node.nil?
+
+    left_depth = tree_node.left.nil? ? 0 : 1 + depth(tree_node.left)
+    right_depth = tree_node.right.nil? ? 0 : 1 + depth(tree_node.right)
+
+    [left_depth, right_depth].max
   end
 
   def is_balanced?(tree_node = @root)
+    return true if tree_node.nil?
+
+    left_dep = depth(tree_node.left)
+    right_dep = depth(tree_node.right)
+
+    left_bal = is_balanced?(tree_node.left)
+    right_bal = is_balanced?(tree_node.right)
+
+    if (left_dep - right_dep).abs > 1 && left_bal && right_bal
+      return true
+    end
+
+    false
   end
 
   def in_order_traversal(tree_node = @root, arr = [])
@@ -73,9 +95,11 @@ class BinarySearchTree
     if !node.left && !node.right
       delete_reference_to_node(node)
     elsif node.left && !node.right
-      node = node.left
+      node.parent.left = node.left
+      node.parent = nil
     elsif !node.left && node.right
-      node = node.right
+      node.parent.right = node.right
+      node.parent = nil
     else
       replacement = maximum(node.left)
       node.value = replacement.value
