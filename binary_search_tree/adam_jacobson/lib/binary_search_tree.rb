@@ -35,10 +35,10 @@ class BinarySearchTree
 
   def delete(value)
     node = find(value)
-    if node == @root
-      @root = nil
-      return
-    end
+    # if node == @root
+    #   @root = nil
+    #   return
+    # end
     delete_node(node) if node
   end
 
@@ -81,6 +81,13 @@ class BinarySearchTree
   end
 
   def in_order_traversal(tree_node = @root, arr = [])
+    return if tree_node.nil?
+
+    in_order_traversal(tree_node.left, arr)
+    arr << tree_node.value
+    in_order_traversal(tree_node.right, arr)
+
+    arr
   end
 
   private
@@ -92,6 +99,8 @@ class BinarySearchTree
       else
         node.parent.right = nil
       end
+    else
+      @root = nil
     end
   end
 
@@ -107,7 +116,6 @@ class BinarySearchTree
     else
       replacement = maximum(node.left)
       node.value = replacement.value
-
       delete_node(replacement)
     end
   end
