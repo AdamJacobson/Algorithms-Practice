@@ -17,7 +17,7 @@ class Edge
 
     @to_vertex = to_vertex
     @to_vertex.in_edges << self
-    
+
     @cost = cost
   end
 
