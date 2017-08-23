@@ -4,6 +4,7 @@ class DynamicProgramming
 
   def initialize
     @blair_cache = { 1 => 1, 2 => 2 }
+    @frog_cache = [[], [[1]], [[1,1],[2]], [[1,1,1],[1,2],[2,1],[3]]]
   end
 
   # 1, 2, 6, 13
@@ -34,10 +35,10 @@ class DynamicProgramming
   end
 
   def frog_cache_builder(n)
-    cache = [
-      [], [[1]], [[1,1],[2]], [[1,1,1],[1,2],[2,1],[3]]
-    ]
-    return cache[n] if cache[n]
+    # cache = [
+    #   [], [[1]], [[1,1],[2]], [[1,1,1],[1,2],[2,1],[3]]
+    # ]
+    return @frog_cache[n] if @frog_cache[n]
 
     # [[1]] << 3 -> [[1,3]]
     # [[1,1],[2]] << 2 -> [[1,1,2],[2,2]]
@@ -47,23 +48,33 @@ class DynamicProgramming
       ans = []
 
       (1..3).each do |offset|
-        cache[i - offset].each do |steps|
+        @frog_cache[i - offset].each do |steps|
           ans << steps + [offset]
         end
       end
 
-      cache[i] = ans
+      @frog_cache[i] = ans
     end
 
-    cache[n]
+    @frog_cache[n]
   end
 
   def frog_hops_top_down(n)
-
+    frog_hops_top_down_helper(n)
   end
 
   def frog_hops_top_down_helper(n)
+    return @frog_cache[n] if @frog_cache[n]
 
+    ans = []
+    (1..3).each do |offset|
+      frog_hops_top_down_helper(n - offset).each do |steps|
+        ans << steps + [offset]
+      end
+    end
+    @frog_cache[n] = ans
+
+    ans
   end
 
   def super_frog_hops(n, k)
