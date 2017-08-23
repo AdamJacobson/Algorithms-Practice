@@ -29,3 +29,7 @@ def topological_sort(vertices)
 
   []
 end
+
+def topological_sort2(vertices)
+
+end
