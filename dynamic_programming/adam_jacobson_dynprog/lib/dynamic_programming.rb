@@ -35,9 +35,6 @@ class DynamicProgramming
   end
 
   def frog_cache_builder(n)
-    # cache = [
-    #   [], [[1]], [[1,1],[2]], [[1,1,1],[1,2],[2,1],[3]]
-    # ]
     return @frog_cache[n] if @frog_cache[n]
 
     # [[1]] << 3 -> [[1,3]]
@@ -77,8 +74,39 @@ class DynamicProgramming
     ans
   end
 
-  def super_frog_hops(n, k)
+  # max jumps = 4
+  # []
+  # [1]
+  # [[1,1],[2]]
+  # [[1,1,1],[2,1],[1,2],[3]]
+  # [[1,1,1,1],[2,1,1],[1,2,1],[3,1][1,1,2],[2,2],[1,3],[4]]
 
+  # [[1,1,1,1,1],[2,1,1,1],[1,2,1,1],[3,1,1][1,1,2,1],[2,2,1],[1,3,1],[4,1]]
+  # [[1,1,1,2],[2,1,2],[1,2,2],[3,2][1,1,3],[2,3],[1,4],[4]]
+
+  # max jump = 2
+  # []
+  # [1]
+  # [[1,1],[2]]
+  # [[1,1,1],[2,1],[1,2],[2]] Only increment if last element is < max jump
+
+  def super_frog_hops(n, max_jump)
+    @super_frog_cache = [[], [[1]]]
+    super_frog_helper(n, max_jump)
+  end
+
+  def super_frog_helper(n, max_jump)
+    return @super_frog_cache[n] if @super_frog_cache[n]
+
+    ans = []
+
+    super_frog_helper(n - 1, max_jump).each do |steps|
+      ans << steps + [1]
+      ans << steps[0...-1] + [steps.last + 1] if steps.last < max_jump
+    end
+
+    @super_frog_cache[n] = ans
+    ans
   end
 
   def knapsack(weights, values, capacity)
