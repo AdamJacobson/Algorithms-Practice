@@ -27,11 +27,32 @@ class DynamicProgramming
   end
 
   def frog_hops_bottom_up(n)
-
+    cache = frog_cache_builder(n)
+    cache
   end
 
   def frog_cache_builder(n)
+    cache = [
+      [], [[1]], [[1,1],[2]], [[1,1,1],[1,2],[2,1],[3]]
+    ]
+    return cache[n] if cache[n]
 
+    # [[1]] -> [[1,3],[3,1]]
+    # [[1,1],[2]] -> [[2,1,1],[1,2,1],[1,1,2],[2,2]]
+    [[1,1],[2]].map {|x| x << 2}.map {|x| x.permutation.to_a}.flatten(1).uniq
+    # [1,1,1,1], [1,1,2], [1,2,1], [2,1,1], [1,3], [3,1], [2,2]
+    # [1,1,1,1], [1,1,2], [1,2,1], [1,3], [2,1,1], [2,2], [3,1]
+
+    (4..n).each do |i|
+      minusOne = cache[i - 1].map { |x| x << 1 }.map { |x| x.permutation.to_a.uniq }.flatten(1)
+      minusTwo = cache[i - 2].map { |x| x << 2 }.map { |x| x.permutation.to_a.uniq }.flatten(1)
+      minusThree = cache[i - 3].map { |x| x << 3 }.map { |x| x.permutation.to_a.uniq }.flatten(1)
+
+      cache[i] = (minusOne + minusTwo + minusThree).uniq
+      # cache[i] = cache[i - 1] + cache[i - 2] + cache[i - 3]
+    end
+
+    cache[n]
   end
 
   def frog_hops_top_down(n)
