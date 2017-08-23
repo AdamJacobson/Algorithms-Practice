@@ -1,3 +1,5 @@
+require "byebug"
+
 class DynamicProgramming
 
   def initialize
@@ -37,19 +39,20 @@ class DynamicProgramming
     ]
     return cache[n] if cache[n]
 
-    # [[1]] -> [[1,3],[3,1]]
-    # [[1,1],[2]] -> [[2,1,1],[1,2,1],[1,1,2],[2,2]]
-    [[1,1],[2]].map {|x| x << 2}.map {|x| x.permutation.to_a}.flatten(1).uniq
-    # [1,1,1,1], [1,1,2], [1,2,1], [2,1,1], [1,3], [3,1], [2,2]
-    # [1,1,1,1], [1,1,2], [1,2,1], [1,3], [2,1,1], [2,2], [3,1]
+    # [[1]] << 3 -> [[1,3]]
+    # [[1,1],[2]] << 2 -> [[1,1,2],[2,2]]
+    # [[1,1,1],[1,2],[2,1],[3]] << 1 -> [[1,1,1,1],[1,2,1],[2,1,1],[3,1]]
 
     (4..n).each do |i|
-      minusOne = cache[i - 1].map { |x| x << 1 }.map { |x| x.permutation.to_a.uniq }.flatten(1)
-      minusTwo = cache[i - 2].map { |x| x << 2 }.map { |x| x.permutation.to_a.uniq }.flatten(1)
-      minusThree = cache[i - 3].map { |x| x << 3 }.map { |x| x.permutation.to_a.uniq }.flatten(1)
+      ans = []
 
-      cache[i] = (minusOne + minusTwo + minusThree).uniq
-      # cache[i] = cache[i - 1] + cache[i - 2] + cache[i - 3]
+      (1..3).each do |offset|
+        cache[i - offset].each do |steps|
+          ans << steps + [offset]
+        end
+      end
+
+      cache[i] = ans
     end
 
     cache[n]
