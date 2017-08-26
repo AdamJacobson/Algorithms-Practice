@@ -5,6 +5,7 @@ class DynamicProgramming
   def initialize
     @blair_cache = { 1 => 1, 2 => 2 }
     @frog_cache = [[], [[1]], [[1,1],[2]], [[1,1,1],[1,2],[2,1],[3]]]
+    @super_frog_cache = [[], [[1]]]
   end
 
   # 1, 2, 6, 13
@@ -91,26 +92,22 @@ class DynamicProgramming
   # [[1,1,1],[2,1],[1,2],[2]] Only increment if last element is < max jump
 
   def super_frog_hops(n, max_jump)
-    @super_frog_cache = [[], [[1]]]
-    super_frog_helper(n, max_jump)
-  end
-
-  def super_frog_helper(n, max_jump)
-    return @super_frog_cache[n] if @super_frog_cache[n]
+    return [[]] if n == 0
+    return [[1]] if n == 1
 
     ans = []
 
-    super_frog_helper(n - 1, max_jump).each do |steps|
+    super_frog_hops(n - 1, max_jump).each do |steps|
       ans << steps + [1]
       ans << steps[0...-1] + [steps.last + 1] if steps.last < max_jump
     end
 
-    @super_frog_cache[n] = ans
     ans
   end
 
   def knapsack(weights, values, capacity)
-
+    return 0 if capacity == 0
+    values[0]
   end
 
   # Helper method for bottom-up implementation
